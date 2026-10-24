@@ -192,7 +192,13 @@ def health():
 @app.post("/api/generate-workout")
 def generate_workout(req: Optional[WorkoutRequest] = None):
     req = req or WorkoutRequest()
-    template = TEMPLATE_PATH.read_text(encoding="utf-8")
+    try:
+        template = TEMPLATE_PATH.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Workout template file is missing from the deployment: {exc}",
+        )
     prompt = _fill_template(template, req)
 
     try:
