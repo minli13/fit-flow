@@ -21,7 +21,7 @@ app = FastAPI(title="Fit Flow")
 # Allow the React dev server (and same-origin production) to call the API.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=["*"],  # Allows requests from your frontend service
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
