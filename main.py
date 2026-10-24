@@ -18,11 +18,27 @@ load_dotenv()
 
 app = FastAPI(title="Fit Flow")
 
-# Allow the React dev server (and same-origin production) to call the API.
+
+def _allowed_origins() -> list[str]:
+    """CORS origins from ALLOWED_ORIGINS (comma-separated); empty = allow all.
+
+    Empty (the default) keeps permissive behavior so any frontend origin — the
+    Vite dev server or a Render static site — can call the API. Set
+    ALLOWED_ORIGINS in production to lock it down to specific origins.
+    """
+    raw = os.environ.get("ALLOWED_ORIGINS", "").strip()
+    if not raw:
+        return ["*"]
+    return [o.strip() for o in raw.split(",") if o.strip()]
+
+
+# Allow the React dev server (and the production frontend) to call the API.
+# No cookies/auth headers are used, so credentials are off — which also makes
+# the "*" default valid (wildcard + credentials is rejected by browsers).
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows requests from your frontend service
-    allow_credentials=True,
+    allow_origins=_allowed_origins(),
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

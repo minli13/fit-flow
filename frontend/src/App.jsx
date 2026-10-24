@@ -1,7 +1,9 @@
 import { useState } from "react";
 import "./App.css";
 
-const API_BASE = "/api";
+const API_BASE = import.meta.env.DEV
+  ? "" // relative — Vite proxies /api -> backend on :8000 in dev
+  : import.meta.env.VITE_API_BASE || "https://fit-flow-fh0m.onrender.com";
 
 const DEFAULT_FORM = {
   workout_type: "",
@@ -168,7 +170,7 @@ function App() {
     setError(null);
     setResult(null);
     try {
-      const res = await fetch(`${API_BASE}/generate-workout`, {
+      const res = await fetch(`${API_BASE}/api/generate-workout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
