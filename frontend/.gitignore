@@ -1,3 +1,9 @@
+# Ignore the specific local environment file
+.env
+
+# Ignore all variations of env files (e.g., .env.local, .env.development, .env.secret)
+.env.*
+
 # Logs
 logs
 *.log
